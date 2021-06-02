@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mySQLClasses.dao.IUserDao">
+    <!--配置查询所有-->
+    <select id="findAll" resultType="com.mySQLClasses.domain.User">
+        select * from USER
+    </select>
+
+    <!--保存用户-->
+    <insert id="sendUser" parameterType="com.mySQLClasses.domain.User">
+
+        insert into user(userName,userId,userMobile,accountId,userStatues,accessTime) value (#{userName},
+        #{userId},#{userMobile},#{accountId},#{userStatues},#{accessTime});
+    </insert>
+    <!--更新用户（以主键userId定位需更新的用户数据）-->
+    <update id="updateUser" parameterType="com.mySQLClasses.domain.User">
+        update user set userName=#{userName},accountId=#{accountId},
+        userStatues=#{userStatues},accessTime=#{accessTime} where userId=#{userId};
+    </update>
+
+    <!--更新用户（尝试使用其他非主键是否能定位更新主键信息）-->
+    <update id="updateByNoPrivate" parameterType="com.mySQLClasses.domain.User">
+        update user set userName=#{userName},userId=#{userId},
+        userStatues=#{userStatues},accessTime=#{accessTime} where accountId=#{accountId};
+    </update>
+
+    <!--删除用户信息-->
+    <delete id="deleteUser" parameterType="java.lang.String">
+        delete from user where userId=#{id};
+    </delete>
+
+    <!--根据Id（主键）查询用户信息-->
+    <select id="selectById" parameterType="java.lang.String" resultType="com.mySQLClasses.domain.User">
+        select * from user where userId=#{id};
+    </select>
+
+    <!--模糊查询用户信息
+        两条语句均可以实现模糊查询，但上句需在调用函数时使用通配符，下句只需传入模糊查询的确定数据信息即可
+    -->
+    <select id="selectLike" parameterType="java.lang.String" resultType="com.mySQLClasses.domain.User">
+        <!--select * from user where userName like #{username}-->
+        select * from user where userName like '%${valaue}%'
+    </select>
+
+</mapper>
